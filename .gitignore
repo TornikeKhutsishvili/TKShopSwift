@@ -14,7 +14,7 @@ dist-ssr
 
 dataconnect
 functions
-src/dataconnect-generated
+src/core/dataconnect-generated
 email.tsx
 .firebase
 .firebaserc
