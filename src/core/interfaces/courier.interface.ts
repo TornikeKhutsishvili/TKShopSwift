@@ -1,3 +1,3 @@
 export interface ICourier {
-  id: string;
+  id: number;
 }
