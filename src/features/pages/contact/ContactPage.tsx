@@ -3,7 +3,7 @@ import ContactForm from './ContactForm';
 import Map from './Map';
 import { sendEmail } from '../../../core/services/email';
 
-const Contact: React.FC = () => {
+const ContactPage: React.FC = () => {
   const [form, setForm] = useState({ name: "", email: "", message: ""});
   const change = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => { setForm({ ...form, [e.target.name]: e.target.value }) };
   const submit = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -22,19 +22,25 @@ const Contact: React.FC = () => {
 
   return (
     <>
-      <h1>Contact</h1>
-      <div className="row g-4">
-        {/* Contact Form */}
-        <div className="col-md-6">
-          <ContactForm change={change} form={form} submit={submit} />
-        </div>
-        {/* Map */}
-        <div className="col-md-6">
-          <Map map={map} />
+      <div className="max-w-full mx-auto px-2 py-10">
+        <h1 className="text-4xl font-bold text-gray-900 mb-10 text-center">
+          Contact Us
+        </h1>
+
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Form */}
+          <div className="bg-white p-6 rounded-2xl shadow-md">
+            <ContactForm change={change} form={form} submit={submit} />
+          </div>
+
+          {/* Map */}
+          <div className="bg-white p-6 rounded-2xl shadow-md">
+            <Map map={map} />
+          </div>
         </div>
       </div>
     </>
   )
 }
 
-export default Contact;
+export default ContactPage;

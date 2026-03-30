@@ -1,9 +1,9 @@
 import type { IGeneral } from "./general.interface";
 
-type Role = "user";
+type TRole = "user";
 
 export interface IUser extends IGeneral {
-  role: Role;
+  role: TRole;
   address: IAddress;
 }
 

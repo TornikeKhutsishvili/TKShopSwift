@@ -43,13 +43,13 @@ const userSlice = createSlice({
 
     // UPDATE
     builder.addCase(updateUser.fulfilled, (state, action) => {
-      const index = state.users.findIndex((u) => u.id === action.payload.id);
+      const index = state.users.findIndex((u) => u.pid === action.payload.pid);
       if (index !== -1) state.users[index] = action.payload;
     })
 
     // DELETE
     builder.addCase(deleteUser.fulfilled, (state, action) => {
-      state.users = state.users.filter((u) => u.id !== action.payload);
+      state.users = state.users.filter((u) => u.pid !== action.payload);
     });
   }
 });
