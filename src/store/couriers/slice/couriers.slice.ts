@@ -35,13 +35,13 @@ const couriersSlice = createSlice({
 
     // UPDATE
     builder.addCase(updateCourier.fulfilled, (state, action) => {
-      const index = state.couriers.findIndex((c) => c.id === action.payload.id);
+      const index = state.couriers.findIndex((c) => c.pid === action.payload.pid);
       if (index !== -1) state.couriers[index] = action.payload;
     });
 
     // DELETE
     builder.addCase(deleteCourier.fulfilled, (state, action) => {
-      state.couriers = state.couriers.filter((c) => c.id !== action.payload);
+      state.couriers = state.couriers.filter((c) => c.pid !== action.payload);
     });
   },
 });

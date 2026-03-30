@@ -1,8 +1,9 @@
 import type { IGeneral } from "./general.interface";
 
-type Role = "courier";
+type TRole = "courier";
+
 export interface ICourier extends IGeneral {
-  role: Role;
+  role: TRole;
   vehicle: string;
   workingDays: IWorkingDays;
 }
