@@ -1,6 +1,7 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 import Header from './Header'
+import Footer from './Footer'
 
 const MainLayout: React.FC = () => {
   return (
@@ -9,8 +10,9 @@ const MainLayout: React.FC = () => {
       <main className="container">
         <Outlet />
       </main>
+      <Footer />
     </>
   )
 }
 
-export default MainLayout
+export default MainLayout;
