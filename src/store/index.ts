@@ -1,9 +1,12 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import adminReducer from './admin/slice/admin.slice';
+import usersReducer from "./users/slice/users.slice";
+import couriersReducer from "./couriers/slice/couriers.slice";
 
 const rootReducer = combineReducers({
-    admin: AdminReducer,
-    users: UsersReducer,
-    couriers: CouriersReducer,
+    admin: adminReducer,
+    users: usersReducer,
+    couriers: couriersReducer,
 })
 
 export const store = configureStore({
