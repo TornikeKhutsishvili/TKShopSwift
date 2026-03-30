@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { lazy } from 'react'
 import { Route, Routes } from 'react-router-dom'
-import ErrorPage from '../features/pages/ErrorPage'
 
+// Lazy Routes
+const ErrorPage = lazy(() => import("../features/pages/ErrorPage"));
+
+// App Routes
 const AppRoutes:React.FC = () => {
   return (
     <Routes>
