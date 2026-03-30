@@ -1,3 +1,3 @@
 export interface IAdmin {
-  id: string;
+  id: number;
 }
