@@ -1,9 +1,17 @@
-import React from 'react'
+import React, { type ReactNode } from "react";
 
-const BaseForm: React.FC = () => {
-  return (
-    <div>BaseForm</div>
-  )
+interface BaseFormProps {
+  title: string;
+  onSubmit: (e: React.SubmitEvent<HTMLFormElement>) => void;
+  children: ReactNode;
 }
 
-export default BaseForm
+const BaseForm: React.FC<BaseFormProps> = ({ onSubmit, children }) => {
+  return (
+    <form onSubmit={onSubmit} className="space-y-6 p-8 shadow rounded-lg">
+      {children}
+    </form>
+  );
+};
+
+export default BaseForm;

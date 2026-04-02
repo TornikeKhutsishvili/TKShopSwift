@@ -1,7 +1,10 @@
 import React from 'react'
 
 interface SelectProps {
-  name: string; value: string; options: { value: string; label: string }[]; className?: string;
+  name: string;
+  value: string;
+  options: { value: string; label: string }[];
+  className?: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   title?: string;
 }
@@ -18,4 +21,4 @@ const Select: React.FC<SelectProps> = ({ name, value, options, className, onChan
   )
 }
 
-export default Select
+export default Select;

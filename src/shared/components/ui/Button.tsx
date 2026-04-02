@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { type ReactNode } from 'react'
 
 interface ButtonProps {
-  onClick: () => void;
+  onClick?: () => void;
   type?: 'button' | 'submit' | 'reset';
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
 }
 
@@ -15,4 +15,4 @@ const Button: React.FC<ButtonProps> = ({ onClick, type, children, className }) =
   )
 }
 
-export default Button
+export default Button;

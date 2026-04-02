@@ -1,7 +1,7 @@
 import type { IGeneral } from "./general.interface";
 
-type TRole = "admin";
+type TypeRole = "admin";
 
 export interface IAdmin extends IGeneral {
-  role: TRole;
+  role: TypeRole;
 }

@@ -1,5 +1,5 @@
 {
-  "name": "tkshopswift",
+  "name": "courier-app",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,14 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@apollo/client": "^4.1.6",
     "@dataconnect/generated": "file:src/dataconnect-generated",
     "@emailjs/browser": "^4.4.1",
     "@reduxjs/toolkit": "^2.11.2",
     "@tailwindcss/vite": "^4.2.2",
     "axios": "^1.14.0",
     "firebase": "^12.11.0",
-    "graphql": "^16.13.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-redux": "^9.2.0",

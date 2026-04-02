@@ -1,3 +1,8 @@
 export interface IBooking {
-  pid: number;
+  id: string;
+  userId?: string;
+  courierId?: string;
+  date?: string;
+  status?: 'pending' | 'confirmed' | 'completed';
+  [key: string]: unknown;
 }
