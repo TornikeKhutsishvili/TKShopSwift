@@ -41,26 +41,15 @@ const couriersSlice = createSlice({
 
     // DELETE
     builder.addCase(deleteCourier.fulfilled, (state, action) => {
-      state.couriers = state.couriers.filter((c) => c.pid !== action.payload);
+      state.couriers = state.couriers.filter((c) => c.id !== action.payload);
     });
   },
 });
 
-export const couriersStateSelector = (state: RootState) => state.couriers;
+export const couriersStateSelector = (couriersState: RootState) => couriersState.couriers;
 
-export const couriersSelector = createSelector(
-  couriersStateSelector,
-  (state) => state.couriers,
-);
-
-export const couriersLoadingSelector = createSelector(
-  couriersStateSelector,
-  (state) => state.loading,
-);
-
-export const couriersErrorSelector = createSelector(
-  couriersStateSelector,
-  (state) => state.error,
-);
+export const couriersSelector = createSelector(couriersStateSelector, (couriersState) => couriersState.couriers);
+export const couriersLoadingSelector = createSelector(couriersStateSelector, (couriersState) => couriersState.loading);
+export const couriersErrorSelector = createSelector(couriersStateSelector, (couriersState) => couriersState.error);
 
 export default couriersSlice.reducer;

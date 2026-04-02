@@ -43,32 +43,21 @@ const userSlice = createSlice({
 
     // UPDATE
     builder.addCase(updateUser.fulfilled, (state, action) => {
-      const index = state.users.findIndex((u) => u.pid === action.payload.pid);
+      const index = state.users.findIndex((u) => u.id === action.payload.id);
       if (index !== -1) state.users[index] = action.payload;
     })
 
     // DELETE
     builder.addCase(deleteUser.fulfilled, (state, action) => {
-      state.users = state.users.filter((u) => u.pid !== action.payload);
+      state.users = state.users.filter((u) => u.id !== action.payload);
     });
   }
 });
 
-export const usersStateSelector = (state: RootState) => state.users;
+export const usersStateSelector = (usersState: RootState) => usersState.users;
 
-export const usersSelector = createSelector(
-  usersStateSelector,
-  (state) => state.users,
-);
-
-export const usersLoadingSelector = createSelector(
-  usersStateSelector,
-  (state) => state.loading,
-);
-
-export const usersErrorSelector = createSelector(
-  usersStateSelector,
-  (state) => state.error,
-);
+export const usersSelector = createSelector(usersStateSelector, (usersState) => usersState.users);
+export const usersLoadingSelector = createSelector(usersStateSelector,(usersState) => usersState.loading);
+export const usersErrorSelector = createSelector(usersStateSelector, (usersState) => usersState.error);
 
 export default userSlice.reducer;

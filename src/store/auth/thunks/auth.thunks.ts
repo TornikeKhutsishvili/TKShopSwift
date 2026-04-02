@@ -1,68 +1,54 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import type { IGeneral } from "../../../core/interfaces/general.interface";
-const BASE_URL = `${import.meta.env.VITE_API_URL}/auth`;
+﻿import { createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  registerWithEmailPassword, fetchUserProfileByUid, signOutUser, loginWithEmailPassword
+} from "../../../core/api/auth.api";
+import type { IAuthUser, IRegisterPayload } from "../../../core/interfaces/auth.interface";
 
-// Get
-export const getAuth = createAsyncThunk<
-  IGeneral[],
-  void,
-  { rejectValue: string }
->("auth/getAuth", async (_, thunkAPI) => {
-  try {
-    const res = await fetch(BASE_URL);
-    if (!res.ok) throw new Error();
-    return await res.json();
-  } catch {
-    return thunkAPI.rejectWithValue("Failed to fetch auth");
-  }
-});
 
-// Add
-export const addAuth = createAsyncThunk<
-  IGeneral,
-  Omit<IGeneral, "id">,
-  { rejectValue: string }
->("auth/addAuth", async (auth, thunkAPI) => {
-  try {
-    const res = await fetch(BASE_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(auth),
-    });
-    return await res.json();
-  } catch {
-    return thunkAPI.rejectWithValue("Failed to add auth");
+export const login = createAsyncThunk<IAuthUser, { email: string; password: string }, { rejectValue: string }>(
+  "auth/login",
+  async ({ email, password }, thunkAPI) => {
+    try {
+      return await loginWithEmailPassword(email, password);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Login failed";
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
-// Update
-export const updateAuth = createAsyncThunk<
-  IGeneral,
-  { id: number; auth: IGeneral },
-  { rejectValue: string }
->("auth/updateAuth", async ({ id, auth }, thunkAPI) => {
-  try {
-    const res = await fetch(`${BASE_URL}/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(auth),
-    });
-    return await res.json();
-  } catch {
-    return thunkAPI.rejectWithValue("Failed to update auth");
+export const register = createAsyncThunk<IAuthUser, IRegisterPayload, { rejectValue: string }>(
+  "auth/register",
+  async (payload, thunkAPI) => {
+    try {
+      return await registerWithEmailPassword(payload);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Registration failed";
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
-// Delete
-export const deleteAuth = createAsyncThunk<
-  number,
-  number,
-  { rejectValue: string }
->("auth/deleteAuth", async (id, thunkAPI) => {
-  try {
-    await fetch(`${BASE_URL}/${id}`, { method: "DELETE" });
-    return id;
-  } catch {
-    return thunkAPI.rejectWithValue("Failed to delete auth");
+export const loadCurrentUser = createAsyncThunk<IAuthUser, string, { rejectValue: string }>(
+  "auth/loadCurrentUser",
+  async (uid, thunkAPI) => {
+    try {
+      return await fetchUserProfileByUid(uid);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to load current user";
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
+
+export const logoutUser = createAsyncThunk<void, void, { rejectValue: string }>(
+  "auth/logout",
+  async (_, thunkAPI) => {
+    try {
+      await signOutUser();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Logout failed";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);

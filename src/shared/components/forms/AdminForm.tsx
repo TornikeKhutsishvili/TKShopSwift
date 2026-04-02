@@ -1,9 +1,9 @@
 import React from 'react'
 
-const AdminForm: React.FC = () => {
+const AdminForm:React.FC = () => {
   return (
-    <div>AdminForm</div>
+    <></>
   )
 }
 
-export default AdminForm
+export default AdminForm;
