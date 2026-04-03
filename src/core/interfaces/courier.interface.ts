@@ -9,6 +9,7 @@ export interface ICourier extends IGeneral {
 }
 
 export interface IWorkingDays {
+  length: number;
   monday: IDate;
   tuesday: IDate;
   wednesday: IDate;

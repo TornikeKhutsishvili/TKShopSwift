@@ -40,7 +40,7 @@ const Users: React.FC = () => {
                   <div className="flex items-center">
 
                     <div className="shrink-0 h-10 w-10">
-                      <img src={user.profileImage} className="h-10 w-10 rounded-full" alt="user" />
+                      <img src={user.profileImage} className="h-10 w-10 rounded-full" alt="user image" />
                     </div>
 
                     <div className="ml-4">

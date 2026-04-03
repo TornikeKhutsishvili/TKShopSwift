@@ -1,16 +1,12 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../firestore/firebase";
 import type { IAuthUser, IRegisterPayload } from "../interfaces/auth.interface";
 
 const profileDocument = (uid: string) => doc(db, "profiles", uid);
-// const userDocument = (uid: string) => doc(db, "users", uid);
-// const adminDocument = (uid: string) => doc(db, "admins", uid);
-// const courierDocument = (uid: string) => doc(db, "couriers", uid);
-
-const usersCollection = collection(db, "couriers");
-const adminCollection = collection(db, "couriers");
-const couriersCollection = collection(db, "couriers");
+const usersCollection = (uid: string) => doc(db, "users", uid);
+const adminCollection = (uid: string) => doc(db, "admins", uid);
+const couriersCollection = (uid: string) => doc(db, "couriers", uid);
 
 const buildAuthProfile = (uid: string, payload: IRegisterPayload): IAuthUser => ({
   id: uid,
@@ -31,19 +27,18 @@ export const registerWithEmailPassword = async (payload: IRegisterPayload): Prom
   const credential = await createUserWithEmailAndPassword(auth, payload.email, payload.password);
   const uid = credential.user.uid;
 
-  const profile = buildAuthProfile(uid, { ...payload });
+  const profile = buildAuthProfile(uid, {
+    ...payload,
+    profileImage: payload.profileImage
+    ? JSON.stringify({ profileImage : payload.profileImage })
+    : "",
+  });
 
   await setDoc(profileDocument(uid), profile);
 
-  // if (payload.role === "user") await setDoc(userDocument(uid), profile);
-  const userRef = doc(usersCollection, uid);
-  if (payload.role === "user") await setDoc(userRef, profile);
-  // if (payload.role === "admin") await setDoc(adminDocument(uid), profile);
-  const adminRef = doc(adminCollection, uid);
-  if (payload.role === "admin") await setDoc(adminRef, profile);
-  // if (payload.role === "courier") await setDoc(courierDocument(uid), profile);
-  const courierRef = doc(couriersCollection, uid);
-  if (payload.role === "courier") await setDoc(courierRef, profile);
+  if (payload.role === "user") await setDoc(usersCollection(uid), profile);
+  if (payload.role === "admin") await setDoc(adminCollection(uid), profile);
+  if (payload.role === "courier") await setDoc(couriersCollection(uid), profile);
 
   return profile;
 };
@@ -74,4 +69,22 @@ export const fetchUserProfileByUid = async (uid: string): Promise<IAuthUser> => 
   }
 
   throw new Error("User profile not found");
+};
+
+export const updateUserProfile = async (uid: string, updates: Partial<IAuthUser>): Promise<IAuthUser> => {
+  const profileRef = profileDocument(uid);
+  await setDoc(profileRef, updates, { merge: true });
+
+  const profile = await fetchUserProfileByUid(uid);
+  const roleCollections = {
+    user: usersCollection(uid),
+    admin: adminCollection(uid),
+    courier: couriersCollection(uid),
+  };
+
+  if (profile.role in roleCollections) {
+    await setDoc(roleCollections[profile.role as keyof typeof roleCollections], { ...profile, ...updates }, { merge: true });
+  }
+
+  return { ...profile, ...updates };
 };
