@@ -12,6 +12,20 @@ dist
 dist-ssr
 *.local
 
+dataconnect
+functions
+src/core/dataconnect-generated
+email.tsx
+.firebase
+.firebaserc
+firestore.indexes.json
+firebase.json
+src/core/firestore/firebase.ts
+firestore.rules
+storage.rules
+database.rules.json
+package-lock.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -22,3 +36,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+*.hintrc
+*.env
