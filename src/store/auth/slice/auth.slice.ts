@@ -1,7 +1,7 @@
 import { createSlice, createSelector } from "@reduxjs/toolkit";
 import type { RootState } from "../..";
 import type { IAuthUser } from "../../../core/interfaces/auth.interface";
-import { login, register, loadCurrentUser, logoutUser } from "../thunks/auth.thunks";
+import { login, register, loadCurrentUser, logoutUser, updateCurrentUser } from "../thunks/auth.thunks";
 
 interface IAuthState {
   user: IAuthUser | null;
@@ -71,6 +71,10 @@ const authSlice = createSlice({
       state.error = null;
     });
     builder.addCase(logoutUser.rejected, handleRejected);
+
+    builder.addCase(updateCurrentUser.pending, handlePending);
+    builder.addCase(updateCurrentUser.fulfilled, handleAuthFulfilled);
+    builder.addCase(updateCurrentUser.rejected, handleRejected);
   },
 });
 

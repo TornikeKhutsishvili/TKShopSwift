@@ -4,16 +4,22 @@ import Button from "../../components/ui/Button";
 import UserSidebar from "./UserSidebar";
 import CourierSidebar from "./CourierSidebar";
 import AdminSidebar from "./AdminSidebar";
-import { authUserSelector } from "../../../store/auth/slice/auth.slice";
+import { authUserSelector, authLoadingSelector } from "../../../store/auth/slice/auth.slice";
 import { logoutUser } from "../../../store/auth/thunks/auth.thunks";
 import { useAppDispatch, useAppSelector } from "../../../core/hooks/useHooks";
 
 const Sidebar: React.FC = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(authUserSelector);
+  const authLoading = useAppSelector(authLoadingSelector);
 
-  const handleLogout = () => {
-    dispatch(logoutUser());
+  const handleLogout = async () => {
+    try {
+      await dispatch(logoutUser()).unwrap();
+    } catch (error) {
+      console.error("Logout failed:", error);
+      alert("Logout failed. Please try again.");
+    }
   };
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
@@ -49,10 +55,11 @@ const Sidebar: React.FC = () => {
       {/* Logout */}
       <div className="p-4 border-t border-gray-200">
         <Button type="button" onClick={handleLogout}
-          className="flex items-center w-full px-2 py-2 text-sm font-medium text-red-600 rounded-md hover:bg-red-50 hover:cursor-pointer"
+          className="flex items-center w-full px-2 py-2 text-sm font-medium text-red-600 rounded-md hover:bg-red-50 hover:cursor-pointer disabled:opacity-50"
+          disabled={authLoading}
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path d="m16 17 5-5-5-5" /><path d="M21 12H9" /><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /></svg>
-          Logout
+          {authLoading ? "Logging out..." : "Logout"}
         </Button>
       </div>
     </div>

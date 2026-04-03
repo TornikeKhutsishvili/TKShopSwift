@@ -1,16 +1,16 @@
 import React from 'react'
-import { useAppSelector } from '../../../../core/hooks/useHooks';
-import { usersSelector } from '../../../../store/users/slice/users.slice';
-import { couriersSelector } from '../../../../store/couriers/slice/couriers.slice';
-import { bookingsSelector } from '../../../../store/booking/slice/booking.slice';
 import type { IUser } from '../../../../core/interfaces/user.interface';
 import type { ICourier } from '../../../../core/interfaces/courier.interface';
 import type { IBooking } from '../../../../core/interfaces/booking.interface';
+import useGetUsers from '../../../../core/hooks/useGetUsers';
+import useGetCourier from '../../../../core/hooks/useGetCourier';
+import { useSelector } from 'react-redux';
+import { bookingsSelector } from '../../../../store/booking/slice/booking.slice';
 
 const AdminDashboard: React.FC = () => {
-  const users = useAppSelector(usersSelector);
-  const couriers = useAppSelector(couriersSelector);
-  const bookings = useAppSelector(bookingsSelector);
+  const { users } = useGetUsers();
+  const { couriers } = useGetCourier();
+  const bookings = useSelector(bookingsSelector);
 
   const totalUsers = users.filter((u: IUser) => u.role === "user").length;
   const totalCouriers = couriers.filter((u: ICourier) => u.role === "courier").length;

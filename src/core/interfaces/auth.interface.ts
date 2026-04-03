@@ -1,8 +1,6 @@
 import type { ISchedule } from "../../shared/components/forms/CourierForm";
 import type { TRole } from "./role.type";
 
-type TProfileImage = string | File | null;
-
 export interface IAuthUser {
   id: string;
   role: TRole;
@@ -10,7 +8,7 @@ export interface IAuthUser {
   firstName: string;
   lastName: string;
   phoneNumber?: number;
-  profileImage?: TProfileImage;
+  profileImage?: string;
   pid?: number;
   personalId?: string;
   address?: string;
@@ -30,7 +28,7 @@ export interface IRegisterPayload {
   firstName: string;
   lastName: string;
   phoneNumber?: number;
-  profileImage?: TProfileImage;
+  profileImage?: string;
   pid?: number;
   personalId?: string;
   address?: string;

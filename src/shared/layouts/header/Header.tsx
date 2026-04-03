@@ -8,10 +8,13 @@ const Header: React.FC = () => {
 
   if (!user) return null;
 
+  const { firstName, lastName, role, profileImage } = user;
+  const avatar = profileImage ?? "";
+
   return (
     <header className="bg-white shadow-sm h-16 flex items-center justify-between px-6">
       <Navbar
-        name={user.firstName} fullName={`${user.firstName} ${user.lastName}`} role={user.role} avatar={typeof user.profileImage === "string" ? user.profileImage : ""}
+        name={firstName} fullName={`${firstName} ${lastName}`} role={role} avatar={avatar}
       />
     </header>
   );
