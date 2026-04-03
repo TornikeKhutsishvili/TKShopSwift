@@ -2,8 +2,9 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getBookingsAPI, addBookingAPI, deleteBookingAPI } from "../../../core/api/booking.api";
 import type { IBooking } from "../../../core/interfaces/booking.interface";
 
+
 // GET BOOKINGS
-export const getBookings = createAsyncThunk<IBooking[], { userId?: string; courierId?: string }, { rejectValue: string }>(
+export const getBookings = createAsyncThunk<IBooking[], { userId: string; courierId: string }, { rejectValue: string }>(
   "booking/getBookings",
   async (filter, thunkAPI) => {
     try {

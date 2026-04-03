@@ -1,18 +1,21 @@
 import { db } from "../firestore/firebase";
 import { doc, setDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const createSession = async (userId: any) => {
-  await setDoc(doc(db, "sessions", userId), {
+export const createSession: (userId: string, courierId: string) => Promise<void> = async (
+  userId, courierId
+) => {
+  await setDoc(doc(db, "sessions", userId, courierId), {
     userId,
+    courierId,
     loginTime: serverTimestamp(),
     active: true
   });
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const endSession = async (userId: any) => {
-  await updateDoc(doc(db, "sessions", userId), {
+export const endSession: (userId: string, courierId: string) => Promise<void> = async (
+  userId, courierId
+) => {
+  await updateDoc(doc(db, "sessions", userId, courierId), {
     active: false,
     logoutTime: serverTimestamp()
   });

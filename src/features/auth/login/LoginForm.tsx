@@ -4,7 +4,7 @@ import Role from "../register/components/Role";
 import type { TRole } from "../../../core/interfaces/role.type";
 import { login } from "../../../store/auth/thunks/auth.thunks";
 import { authErrorSelector, authLoadingSelector } from "../../../store/auth/slice/auth.slice";
-import { useAppDispatch, useAppSelector } from "../../../core/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../core/hooks/useHooks";
 
 interface LoginFormProps {
   role: TRole;
@@ -23,9 +23,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ role, setRole }) => {
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const result = await dispatch(login({ email, password }));
-    if (login.fulfilled.match(result)) {
-      navigate(`/${role}`);
-    }
+    if (login.fulfilled.match(result)) navigate(`/${role}`);
+    else if (login.rejected.match(result)) console.error("Login failed:", result.payload || result.error);
   };
 
   return (

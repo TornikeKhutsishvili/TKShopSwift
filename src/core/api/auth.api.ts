@@ -1,9 +1,16 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../firestore/firebase";
 import type { IAuthUser, IRegisterPayload } from "../interfaces/auth.interface";
 
 const profileDocument = (uid: string) => doc(db, "profiles", uid);
+// const userDocument = (uid: string) => doc(db, "users", uid);
+// const adminDocument = (uid: string) => doc(db, "admins", uid);
+// const courierDocument = (uid: string) => doc(db, "couriers", uid);
+
+const usersCollection = collection(db, "couriers");
+const adminCollection = collection(db, "couriers");
+const couriersCollection = collection(db, "couriers");
 
 const buildAuthProfile = (uid: string, payload: IRegisterPayload): IAuthUser => ({
   id: uid,
@@ -15,17 +22,29 @@ const buildAuthProfile = (uid: string, payload: IRegisterPayload): IAuthUser => 
   profileImage: payload.profileImage ?? "",
   pid: payload.pid ?? Date.now(),
   personalId: payload.personalId,
-  address: payload.address,
-  vehicle: payload.vehicle,
-  workingDays: payload.workingDays ?? []
+  address: payload.address ?? "",
+  vehicle: payload.vehicle ?? "",
+  workingDays: Array.isArray(payload.workingDays) ? payload.workingDays : [],
 });
-
 
 export const registerWithEmailPassword = async (payload: IRegisterPayload): Promise<IAuthUser> => {
   const credential = await createUserWithEmailAndPassword(auth, payload.email, payload.password);
   const uid = credential.user.uid;
-  const profile = buildAuthProfile(uid, payload);
+
+  const profile = buildAuthProfile(uid, { ...payload });
+
   await setDoc(profileDocument(uid), profile);
+
+  // if (payload.role === "user") await setDoc(userDocument(uid), profile);
+  const userRef = doc(usersCollection, uid);
+  if (payload.role === "user") await setDoc(userRef, profile);
+  // if (payload.role === "admin") await setDoc(adminDocument(uid), profile);
+  const adminRef = doc(adminCollection, uid);
+  if (payload.role === "admin") await setDoc(adminRef, profile);
+  // if (payload.role === "courier") await setDoc(courierDocument(uid), profile);
+  const courierRef = doc(couriersCollection, uid);
+  if (payload.role === "courier") await setDoc(courierRef, profile);
+
   return profile;
 };
 

@@ -19,7 +19,7 @@ export const addUserAPI = async (user: Omit<IUser, "id">): Promise<IUser> => {
 // UPDATE USER
 export const updateUserAPI = async (id: string, user: IUser): Promise<IUser> => {
   const userDoc = doc(db, "users", id);
-  await updateDoc(userDoc, user as any);
+  await updateDoc(userDoc, { ...user});
   return user;
 };
 

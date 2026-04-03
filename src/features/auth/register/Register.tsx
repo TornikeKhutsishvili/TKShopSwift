@@ -10,23 +10,23 @@ import type { TRole } from "../../../core/interfaces/role.type";
 import type { IFormData } from "../../../core/interfaces/formData.interface";
 import { register } from "../../../store/auth/thunks/auth.thunks";
 import { authErrorSelector, authLoadingSelector } from "../../../store/auth/slice/auth.slice";
-import { useAppDispatch, useAppSelector } from "../../../core/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../core/hooks/useHooks";
 
 const Register: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const error = useAppSelector(authErrorSelector);
   const loading = useAppSelector(authLoadingSelector);
-  const [role, setRole] = useState<TRole>("user");
 
+  const [role, setRole] = useState<TRole>("user");
   const [formData, setFormData] = useState<IFormData>({
     file: null,
+    personalId: "",
     firstName: "",
     lastName: "",
     email: "",
     password: "",
     phone: "",
-    personalId: "",
     address: "",
     vehicle: "",
     schedule: [
@@ -48,22 +48,21 @@ const Register: React.FC = () => {
 
     const payload = {
       role,
-      email: formData.email,
-      password: formData.password,
+      personalId: formData.personalId,
       firstName: formData.firstName,
       lastName: formData.lastName,
-      phoneNumber: formData.phone ? Number(formData.phone) : undefined,
-      personalId: formData.personalId,
+      email: formData.email,
+      password: formData.password,
+      profileImage: formData.file,
+      phoneNumber: formData.phone?.trim() ? Number(formData.phone) : undefined,
       address: formData.address,
       vehicle: formData.vehicle,
-      profileImage: formData.file,
       schedule: formData.schedule as ISchedule[],
     };
 
     const result = await dispatch(register(payload));
-    if (register.fulfilled.match(result)) {
-      navigate(`/${result.payload.role}`);
-    }
+    if (register.fulfilled.match(result)) navigate(`/${result.payload.role}`);
+    else if (register.rejected.match(result)) console.error(result.payload || "Registration failed");
   };
 
   return (

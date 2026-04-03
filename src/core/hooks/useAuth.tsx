@@ -3,7 +3,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firestore/firebase";
 import { authUserSelector, authLoadingSelector, clearAuth } from "../../store/auth/slice/auth.slice";
 import { loadCurrentUser } from "../../store/auth/thunks/auth.thunks";
-import { useAppDispatch, useAppSelector } from "./hooks";
+import { useAppDispatch, useAppSelector } from "./useHooks";
 
 const useAuth = () => {
   const dispatch = useAppDispatch();
