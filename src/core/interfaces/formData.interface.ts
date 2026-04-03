@@ -1,7 +1,7 @@
 import type { ISchedule } from "../../shared/components/forms/CourierForm";
 
 export interface IFormData {
-  file: File | null;
+  image: string;
   firstName: string;
   lastName: string;
   email: string;

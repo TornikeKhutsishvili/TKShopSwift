@@ -1,22 +1,31 @@
 import { db } from "../firestore/firebase";
-import { doc, setDoc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc, updateDoc, serverTimestamp, getDoc } from "firebase/firestore";
 
-export const createSession: (userId: string, courierId: string) => Promise<void> = async (
-  userId, courierId
-) => {
-  await setDoc(doc(db, "sessions", userId, courierId), {
-    userId,
-    courierId,
-    loginTime: serverTimestamp(),
-    active: true
-  });
+// Create a session
+export const createSession = async (userId: string) => {
+  const sessionId = crypto.randomUUID();
+
+  await setDoc(
+    doc(db, "sessions", userId, "userSessions", sessionId),
+    {
+      userId,
+      loginTime: serverTimestamp(),
+      active: true,
+    }
+  );
+
+  localStorage.setItem("sessionId", sessionId);
 };
 
-export const endSession: (userId: string, courierId: string) => Promise<void> = async (
-  userId, courierId
-) => {
-  await updateDoc(doc(db, "sessions", userId, courierId), {
-    active: false,
-    logoutTime: serverTimestamp()
-  });
+// End a session
+export const endSession = async (userId: string, sessionId: string) => {
+  const sessionRef = doc(db, "sessions", userId, "userSessions", sessionId);
+
+  const sessionDoc = await getDoc(sessionRef);
+  if (sessionDoc.exists()) {
+    await updateDoc(sessionRef, {
+      active: false,
+      logoutTime: serverTimestamp(),
+    });
+  }
 };

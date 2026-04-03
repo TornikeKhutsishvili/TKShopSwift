@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UserForm from "../../../shared/components/forms/UserForm";
-import CourierForm, { type ISchedule } from "../../../shared/components/forms/CourierForm";
+import CourierForm from "../../../shared/components/forms/CourierForm";
 import Button from "../../../shared/components/ui/Button";
 import RegisterForm from "./RegisterForm";
 import AdminForm from "../../../shared/components/forms/AdminForm";
@@ -19,8 +19,9 @@ const Register: React.FC = () => {
   const loading = useAppSelector(authLoadingSelector);
 
   const [role, setRole] = useState<TRole>("user");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [formData, setFormData] = useState<IFormData>({
-    file: null,
+    image: "",
     personalId: "",
     firstName: "",
     lastName: "",
@@ -29,40 +30,70 @@ const Register: React.FC = () => {
     phone: "",
     address: "",
     vehicle: "",
-    schedule: [
-      { day: "Monday", startTime: "09:00", endTime: "17:00" }
-    ]
+    schedule: [{ day: "Monday", startTime: "09:00", endTime: "17:00" }]
   });
+  const [formError, setFormError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormError(null);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.[0]) setFormData((prev) => ({ ...prev, file: e.target.files![0] }));
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      setFormData((prev) => ({ ...prev, image: file.name }));
+    }
   };
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const workingDays = role === "courier" ? (formData.schedule ?? []) : [];
+    if (role === "courier") {
+      if (workingDays.length < 5) {
+        setFormError("Courier must specify at least 5 working days.");
+        return;
+      }
+
+      for (const item of workingDays) {
+        if (!item.day || !item.startTime || !item.endTime) {
+          setFormError("All schedule entries must include day and valid start/end times.");
+          return;
+        }
+
+        if (item.startTime >= item.endTime) {
+          setFormError(`Invalid working hours for ${item.day} (start must be before end).`);
+          return;
+        }
+      }
+    }
+
     const payload = {
       role,
+      selectedFile,
       personalId: formData.personalId,
       firstName: formData.firstName,
       lastName: formData.lastName,
       email: formData.email,
       password: formData.password,
-      profileImage: formData.file,
       phoneNumber: formData.phone?.trim() ? Number(formData.phone) : undefined,
       address: formData.address,
       vehicle: formData.vehicle,
-      schedule: formData.schedule as ISchedule[],
+      workingDays,
     };
 
     const result = await dispatch(register(payload));
-    if (register.fulfilled.match(result)) navigate(`/${result.payload.role}`);
-    else if (register.rejected.match(result)) console.error(result.payload || "Registration failed");
+
+    if (register.fulfilled.match(result)) {
+      navigate(`/${result.payload.role}`);
+    } else if (register.rejected.match(result)) {
+      const errorText = result.payload || "Registration failed";
+      console.error(errorText);
+      setFormError(errorText);
+    }
   };
 
   return (
@@ -112,6 +143,7 @@ const Register: React.FC = () => {
                     }}
                   />}
 
+                  {formError && <p className="text-red-500 text-sm mt-4">{formError}</p>}
                   {error && <p className="text-red-500 text-sm mt-4">{error}</p>}
                   <div className="pt-5">
                     <Button type="submit"
