@@ -37,19 +37,43 @@ const userSlice = createSlice({
     });
 
     // ADD
+    builder.addCase(addUser.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
     builder.addCase(addUser.fulfilled, (state, action) => {
       state.users.push(action.payload);
-    })
+    });
+    builder.addCase(addUser.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload || "Failed to add user";
+    });
 
     // UPDATE
+    builder.addCase(updateUser.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
     builder.addCase(updateUser.fulfilled, (state, action) => {
       const index = state.users.findIndex((u) => u.id === action.payload.id);
       if (index !== -1) state.users[index] = action.payload;
     })
+    builder.addCase(updateUser.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload || "Failed to update user";
+    });
 
     // DELETE
+    builder.addCase(deleteUser.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
     builder.addCase(deleteUser.fulfilled, (state, action) => {
       state.users = state.users.filter((u) => u.id !== action.payload);
+    });
+    builder.addCase(deleteUser.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload || "Failed to delete user";
     });
   }
 });

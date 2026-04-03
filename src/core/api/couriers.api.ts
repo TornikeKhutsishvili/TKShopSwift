@@ -19,7 +19,7 @@ export const addCourierAPI = async (courier: Omit<ICourier, "id">): Promise<ICou
 // UPDATE COURIER
 export const updateCourierAPI = async (id: string, courier: ICourier): Promise<ICourier> => {
   const courierDoc = doc(db, "couriers", id);
-  await updateDoc(courierDoc, courier as any);
+  await updateDoc(courierDoc, { ...courier });
   return courier;
 };
 

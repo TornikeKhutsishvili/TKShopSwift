@@ -1,6 +1,21 @@
 import React from 'react'
+import { useAppSelector } from '../../../../core/hooks/useHooks';
+import { usersSelector } from '../../../../store/users/slice/users.slice';
+import { couriersSelector } from '../../../../store/couriers/slice/couriers.slice';
+import { bookingsSelector } from '../../../../store/booking/slice/booking.slice';
+import type { IUser } from '../../../../core/interfaces/user.interface';
+import type { ICourier } from '../../../../core/interfaces/courier.interface';
+import type { IBooking } from '../../../../core/interfaces/booking.interface';
 
 const AdminDashboard: React.FC = () => {
+  const users = useAppSelector(usersSelector);
+  const couriers = useAppSelector(couriersSelector);
+  const bookings = useAppSelector(bookingsSelector);
+
+  const totalUsers = users.filter((u: IUser) => u.role === "user").length;
+  const totalCouriers = couriers.filter((u: ICourier) => u.role === "courier").length;
+  const completed = bookings.filter((b: IBooking) => b.status === "completed").length;
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
@@ -16,7 +31,7 @@ const AdminDashboard: React.FC = () => {
               <div className="ml-5 w-0 flex-1">
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 truncate">Total Users</dt>
-                  <dd><div className="text-lg font-medium text-gray-900">1</div></dd>
+                  <dd><div className="text-lg font-medium text-gray-900">{totalUsers}</div></dd>
                 </dl>
               </div>
             </div>
@@ -33,7 +48,7 @@ const AdminDashboard: React.FC = () => {
               <div className="ml-5 w-0 flex-1">
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 truncate">Total Couriers</dt>
-                  <dd><div className="text-lg font-medium text-gray-900" data-yw-s="true">1</div></dd>
+                  <dd><div className="text-lg font-medium text-gray-900" data-yw-s="true">{totalCouriers}</div></dd>
                 </dl>
               </div>
             </div>
@@ -50,7 +65,7 @@ const AdminDashboard: React.FC = () => {
               <div className="ml-5 w-0 flex-1">
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 truncate">Completed Requests</dt>
-                  <dd><div className="text-lg font-medium text-gray-900">0</div></dd>
+                  <dd><div className="text-lg font-medium text-gray-900">{completed}</div></dd>
                 </dl>
               </div>
             </div>

@@ -27,21 +27,54 @@ const couriersSlice = createSlice({
       state.loading = true;
       state.error = null;
     });
+    builder.addCase(getCouriers.fulfilled, (state, action) => {
+      state.couriers = action.payload;
+      state.loading = false;
+    });
+    builder.addCase(getCouriers.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload || "Failed to fetch couriers";
+    });
 
     // ADD
+    builder.addCase(addCourier.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
     builder.addCase(addCourier.fulfilled, (state, action) => {
       state.couriers.push(action.payload);
     });
+    builder.addCase(addCourier.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload || "Failed to add courier";
+    });
 
     // UPDATE
+    builder.addCase(updateCourier.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
     builder.addCase(updateCourier.fulfilled, (state, action) => {
       const index = state.couriers.findIndex((c) => c.pid === action.payload.pid);
       if (index !== -1) state.couriers[index] = action.payload;
     });
+    builder.addCase(updateCourier.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload || "Failed to update courier";
+    });
+
 
     // DELETE
+    builder.addCase(deleteCourier.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
     builder.addCase(deleteCourier.fulfilled, (state, action) => {
       state.couriers = state.couriers.filter((c) => c.id !== action.payload);
+    });
+    builder.addCase(deleteCourier.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload || "Failed to delete courier";
     });
   },
 });

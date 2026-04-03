@@ -6,7 +6,7 @@ import CourierSidebar from "./CourierSidebar";
 import AdminSidebar from "./AdminSidebar";
 import { authUserSelector } from "../../../store/auth/slice/auth.slice";
 import { logoutUser } from "../../../store/auth/thunks/auth.thunks";
-import { useAppDispatch, useAppSelector } from "../../../core/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../core/hooks/useHooks";
 
 const Sidebar: React.FC = () => {
   const dispatch = useAppDispatch();
